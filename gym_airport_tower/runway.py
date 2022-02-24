@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import numpy as np
 
@@ -7,67 +7,120 @@ from gym_airport_tower.runway_alignment import RunwayAlignment
 
 
 class Runway:
-    def __init__(self, position, idx, runway_len=3, alignment=RunwayAlignment.HORIZONTAL):
-        self.position = position
+    """
+    The Runway object represent a Runway in the Airspace. It tracks the Planes which are currently on it. It also checks
+    if the planes are landed correctly. Otherwise Exceptions get raised if crashed occurs.
+    """
+
+    def __init__(self, position: Tuple[int, int], idx: int, runway_len: int = 3,
+                 alignment: RunwayAlignment = RunwayAlignment.HORIZONTAL) -> None:
+        """
+        :param position: Top/left position of Runway.
+        :type position: Tuple[int, int]
+        :param idx: Id of the Runway to identify it in the airspace
+        :type idx: int
+        :param runway_len: Length of runway in tiles.
+        :type runway_len: int
+        :param alignment: Defines if the Runway is aligned vertical or horizontal.
+        :type alignment: RunwayAlignment
+        """
+        self._position = position
         self.id = idx
-        self.runway_len = runway_len
+        self._runway_len = runway_len
         self.alignment = alignment
 
-        self.curr_planes: Dict[Plane, List[int]] = {}
+        self._curr_planes: Dict[Plane, List[int]] = {}
 
-    def get_slicing(self):
+    def get_slicing(self) -> np.lib.index_tricks.IndexExpression:
+        """
+        Returns the position of this runway as numpy sclicing.
+        :return: The position of the runway in the Airspace as Slicing
+        :rtype: numpy.lib.index_tricks.IndexExpression
+        """
         if self.alignment == RunwayAlignment.VERTICAL:
-            return np.s_[self.position[0]: self.position[0] + self.runway_len, self.position[1]]
+            return np.s_[self._position[0]: self._position[0] + self._runway_len, self._position[1]]
         elif self.alignment == RunwayAlignment.HORIZONTAL:
-            return np.s_[self.position[0], self.position[1]: self.position[1] + self.runway_len]
+            return np.s_[self._position[0], self._position[1]: self._position[1] + self._runway_len]
         else:
             raise ValueError
 
-    def update_planes(self, planes: List[Plane]):
-        for plane in list(self.curr_planes.keys()):
+    def update_planes(self, planes: List[Plane]) -> None:
+        """
+        This method updates the planes which are currently on this Runway.
+        If a plane enters the runway it will get registered on the runway.
+        Planes which are already on the Runway gets updated. This means it gets saved in which order the travel over the
+        runway.
+        If planes leave the Runway and are not count as landed. It will raise a exception because it is count as a crash.
+        :param planes: A list of planes which are on the runway at the moment.
+        :type planes: List[Plane]
+        :return: None
+        :rtype: None
+        """
+        for plane in list(self._curr_planes.keys()):
             if plane not in planes:
-                del self.curr_planes[plane]
+                del self._curr_planes[plane]
                 raise ValueError("Aircraft has come off the runway")
             else:
                 planes.remove(plane)
-                self.update_plane(plane)
+                self._update_plane(plane)
         for plane in planes:
-            self.curr_planes[plane] = [0 for _ in range(self.runway_len)]
-            self.update_plane(plane)
+            self._curr_planes[plane] = [0 for _ in range(self._runway_len)]
+            self._update_plane(plane)
 
-    def update_plane(self, plane):
+    def _update_plane(self, plane: Plane) -> None:
+        """
+        This method updates the single information about a plane, which is currently on the Runway.
+        It also checks that the plane traverse the runway in the right order or that the plane landed.
+        :param plane: Plane to update on the Runway
+        :type plane: Plane
+        :return: None
+        :rtype: None
+        """
         if self.alignment == RunwayAlignment.VERTICAL:
-            self.curr_planes[plane][int(plane.position[0] - self.position[0])] = max(self.curr_planes[plane]) + 1
+            self._curr_planes[plane][int(plane.position[0] - self._position[0])] = max(self._curr_planes[plane]) + 1
 
         elif self.alignment == RunwayAlignment.HORIZONTAL:
-            self.curr_planes[plane][int(plane.position[1] - self.position[1])] = max(self.curr_planes[plane]) + 1
+            self._curr_planes[plane][int(plane.position[1] - self._position[1])] = max(self._curr_planes[plane]) + 1
 
-        # self.check_landing_order(plane)  #TODO: activate if working
+        self._check_landing_order(plane)
 
-        self.check_landing_done(plane)
+        self._check_landing_done(plane)
 
-    def check_landing_order(self, plane):
+    def _check_landing_order(self, plane: Plane) -> None:
+        """
+        Checks that the plane traverse the Runway in the right order
+        :param plane: The plane to check
+        :type plane: Plane
+        :return: None
+        :rtype: None
+        """
         right_left = True
         left_right = True
-        land_arr = self.curr_planes[plane]
+        land_arr = self._curr_planes[plane]
         right_order = True
         left_order = True
-        for i in range(self.runway_len - 1):
+        for i in range(self._runway_len - 1):
             if right_order and not land_arr[i] != i + 1:
                 right_order = False
             if not right_order and not land_arr[i] == 0:
                 right_left = False
-        for i in range(self.runway_len - 1, -1, -1):
-            if left_order and not land_arr[i] != self.runway_len - i:
+        for i in range(self._runway_len - 1, -1, -1):
+            if left_order and not land_arr[i] != self._runway_len - i:
                 left_order = False
             if not left_order and not land_arr[i] == 0:
                 left_right = False
         if not right_left and not left_right:
             raise ValueError("Aircraft changed direction on landing ......")
 
-    def check_landing_done(self, plane):
-        landing_arr = self.curr_planes[plane]
-        if landing_arr == list(range(1, self.runway_len + 1)) or landing_arr == list(reversed(range(1, 3 + 1))):
-            #print("LANDED HURRAY")
-            del self.curr_planes[plane]
+    def _check_landing_done(self, plane: Plane) -> None:
+        """
+        Checks that the Plane is landed.
+        :param plane: The plane to check.
+        :type plane: Plane
+        :return: None
+        :rtype: None
+        """
+        landing_arr = self._curr_planes[plane]
+        if landing_arr == list(range(1, self._runway_len + 1)) or landing_arr == list(reversed(range(1, 3 + 1))):
+            del self._curr_planes[plane]
             plane.landed = True
