@@ -5,38 +5,41 @@ from ray.tune import register_env
 
 from gym_airport_tower.airport_tower_env import AirportTowerEnv
 
-
 def env_creator(env_config):
     return AirportTowerEnv(**env_config)
 
 
 register_env("AirportTowerEnv", env_creator)
 
-ray.init()
-tune.run(
-    pg.PGTrainer,
-    stop={"episode_len_mean": 200, 'timesteps_total': 100000},
-    checkpoint_at_end=True,
-    config={
+if not ray.is_initialized():
+    ray.init(dashboard_host="0.0.0.0")
+
+config = {
         # === Settings for Rollout Worker processes ===
-        "num_workers": 2,
+        "num_workers": 6,
+        "num_gpus":1,
         "num_envs_per_worker": 1,
         # === Settings for the Trainer process ===
         "gamma": 0.99,
-        "lr": tune.grid_search([0.01, 0.001, 0.0001]),
+        "lr": tune.uniform(0,0.5),
         #"train_batch_size": 200,
-        #"model": {
-        #    "fcnet_hiddens": [64, 64],
+        "model": {
+            "fcnet_hiddens": [
+            tune.grid_search([16, 64, 256]),
+            tune.grid_search([16, 64, 256])
+            ],
         #    "fcnet_activation": "relu",
-        #},
+        },
         #"optimizer": {},
         # === Deep Learning Framework Settings ===
-        "framework": "torch",
+        "framework": "tf2",
+        "eager_tracing": True,
         # === Environment Settings ===
         "env": 'AirportTowerEnv',
         "horizon": 200,
         "env_config": {
-            "max_planes": 1,
+            "seed": 666,
+            "max_planes": 2,
             "num_runways": 1,
             "runway_length": 3,
             "airspace_size": (5, 5),
@@ -56,5 +59,25 @@ tune.run(
         "exploration_config": {
             "type": "StochasticSampling",
         }
-    },
+    }
+
+tune.run(
+    "PG",
+    stop={"episode_len_mean": 200, 'timesteps_total': 1000000},
+    checkpoint_at_end=True,
+    num_samples=25,
+    config=config,
+    resume="AUTO"
 )
+#trainer = pg.PGTrainer(env="Taxi-v3", config={"num_gpus":1})
+#
+#
+#for i in range(1000):
+#   # Perform one iteration of training the policy with PPO
+#   result = trainer.train()
+#   print("i")
+##   print(pretty_print(result))
+#
+#   if i % 100 == 0:
+#       checkpoint = trainer.save()
+#       print("checkpoint saved at", checkpoint)

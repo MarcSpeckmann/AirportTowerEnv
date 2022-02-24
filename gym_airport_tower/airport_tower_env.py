@@ -20,12 +20,13 @@ class AirportTowerEnv(gym.Env):
                  landing_reward: int = 100,
                  plane_in_air_penalty: int = -1,
                  plane_on_runway_reward: int = 5,
+                 seed: int = 666,
                  render_env: bool = False):
         # Fixed parameter / configurations
         # ===================================
 
-        # self.seed: int = 666
-        # np.random.seed(self.seed)
+        self.seed: int = seed
+        np.random.seed(self.seed)
         self.max_planes: int = max_planes
         self.num_runways: int = num_runways
         self.runway_length: int = runway_length
