@@ -54,17 +54,24 @@ class AirportTowerEnv(gym.Env):
                                            high=self.max_planes * self.landing_reward, shape=(1,), dtype=np.int32)
 
     def step(self, action: Tuple[int, int]):
+        """
+        Implement gym step method,
+        :param action: The action from the agent (planeID, direction)
+        :type action: Tuple[int, int]
+        :return:
+        :rtype:
+        """
         done = False
         reward = 0
 
         num_before_planes = len(self.airspace.planes)
-
+        # Move all planes/fulfill action from agent
         try:
             self.airspace.move_planes(actions=action)
-        except ValueError as e:
-            print(e)
+        except ValueError:
             done = True
 
+        # Check number of landed planes
         num_after_planes = len(self.airspace.planes)
         landed_planes = num_before_planes - num_after_planes
 
@@ -85,13 +92,25 @@ class AirportTowerEnv(gym.Env):
 
         return self.airspace.air_space, reward, done, {}
 
-    def reset(self):
+    def reset(self) -> np.ndarray:
+        """
+        Implement Gym reset method
+        :return: Observation of Airspace
+        :rtype: np.ndarray
+        """
         self.airspace.reset()
         if self.render_env:
             self.render()
         return self.airspace.air_space
 
-    def render(self, mode="human"):
+    def render(self, mode="human") -> None:
+        """
+        Implement Gym render method
+        :param mode: Render mode
+        :type mode: str
+        :return: None
+        :rtype: None
+        """
         airspace = self.airspace.air_space
         if mode == 'human':
             max_val = np.max(airspace)
