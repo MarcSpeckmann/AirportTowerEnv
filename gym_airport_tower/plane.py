@@ -22,7 +22,7 @@ class Plane:
             else:
                 self.random_direction()
                 self.move()
-        elif self.direction == Direction.WEST:
+        elif self.direction == Direction.EAST:
             if self.position[1] < (self.max_shape[1] - 1):
                 self.position[1] += 1
             else:
@@ -34,7 +34,7 @@ class Plane:
             else:
                 self.random_direction()
                 self.move()
-        elif self.direction == Direction.EAST:
+        elif self.direction == Direction.WEST:
             if self.position[1] >= 1:
                 self.position[1] -= 1
             else:

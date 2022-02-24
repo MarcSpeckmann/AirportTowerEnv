@@ -69,15 +69,3 @@ tune.run(
     config=config,
     resume="AUTO"
 )
-#trainer = pg.PGTrainer(env="Taxi-v3", config={"num_gpus":1})
-#
-#
-#for i in range(1000):
-#   # Perform one iteration of training the policy with PPO
-#   result = trainer.train()
-#   print("i")
-##   print(pretty_print(result))
-#
-#   if i % 100 == 0:
-#       checkpoint = trainer.save()
-#       print("checkpoint saved at", checkpoint)
