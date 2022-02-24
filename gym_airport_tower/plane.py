@@ -25,7 +25,7 @@ class Plane:
         self.id = idx
         self.position = position
         self.direction: Direction = direction
-        self.max_shape = max_shape
+        self._max_shape = max_shape
         self.landed = False
 
     def move(self, direction: Direction = None) -> None:
@@ -41,31 +41,31 @@ class Plane:
         if direction:
             self.direction = direction
         if self.direction == Direction.SOUTH:
-            if self.position[0] < (self.max_shape[0] - 1):
+            if self.position[0] < (self._max_shape[0] - 1):
                 self.position[0] += 1
             else:
-                self.random_direction()
+                self._random_direction()
                 self.move()
         elif self.direction == Direction.EAST:
-            if self.position[1] < (self.max_shape[1] - 1):
+            if self.position[1] < (self._max_shape[1] - 1):
                 self.position[1] += 1
             else:
-                self.random_direction()
+                self._random_direction()
                 self.move()
         elif self.direction == Direction.NORTH:
             if self.position[0] >= 1:
                 self.position[0] -= 1
             else:
-                self.random_direction()
+                self._random_direction()
                 self.move()
         elif self.direction == Direction.WEST:
             if self.position[1] >= 1:
                 self.position[1] -= 1
             else:
-                self.random_direction()
+                self._random_direction()
                 self.move()
 
-    def random_direction(self) -> None:
+    def _random_direction(self) -> None:
         """
         This methods sets the flight direction of this plane random to Direction.North, Direction.South, Direction.West
         or Direction.East

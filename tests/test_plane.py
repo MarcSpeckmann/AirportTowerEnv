@@ -73,7 +73,7 @@ class TestPlane(TestCase):
         east = 0
         plane = Plane(position=[4, 6], idx=256, max_shape=(10, 9), direction=Direction.NORTH)
         for i in range(1000000):
-            plane.random_direction()
+            plane._random_direction()
             if plane.direction == Direction.SOUTH:
                 south += 1
             elif plane.direction == Direction.NORTH:
