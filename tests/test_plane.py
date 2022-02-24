@@ -66,6 +66,12 @@ class TestPlane(TestCase):
         elif plane.direction == Direction.SOUTH:
             self.assertEqual(plane.position, [1, 6])
 
+        # Test set discretion
+        plane = Plane(position=[3, 7], idx=0, max_shape=(10, 9), direction=Direction.EAST)
+        plane.move(direction=Direction.SOUTH)
+        self.assertEqual(plane.direction, Direction.SOUTH)
+        self.assertEqual(plane.position, [4, 7])
+
     def test_random_direction(self):
         south = 0
         north = 0
