@@ -14,7 +14,6 @@ class AirportTowerEnv(gym.Env):
                  num_runways: int = 1,
                  runway_length: int = 3,
                  airspace_size: Tuple[int, int] = (5, 5),
-                 airplane_move_tiles_per_step: int = 1,
                  plane_spawn_probability_per_step=0.3,
                  num_start_planes: int = 1,
                  landing_reward: int = 100,
@@ -31,7 +30,6 @@ class AirportTowerEnv(gym.Env):
         self.num_runways: int = num_runways
         self.runway_length: int = runway_length
         self.airspace_size: Tuple[int, int] = airspace_size
-        self.airplane_move_tiles_per_step: int = airplane_move_tiles_per_step
         self.plane_spawn_probability_per_step = plane_spawn_probability_per_step
         self.num_start_planes: int = num_start_planes
         self.landing_reward: int = landing_reward
@@ -43,7 +41,6 @@ class AirportTowerEnv(gym.Env):
         # ===================================
         self.airspace: Airspace = Airspace(airspace_size=self.airspace_size, max_planes=self.max_planes,
                                            num_runways=self.num_runways, runway_length=self.runway_length,
-                                           airplane_move_tiles_per_step=self.airplane_move_tiles_per_step,
                                            plane_spawn_probability_per_step=self.plane_spawn_probability_per_step,
                                            num_start_planes=self.num_start_planes)
 
@@ -65,7 +62,7 @@ class AirportTowerEnv(gym.Env):
         try:
             self.airspace.move_planes(actions=action)
         except ValueError as e:
-            # print(e)
+            print(e)
             done = True
 
         num_after_planes = len(self.airspace.planes)

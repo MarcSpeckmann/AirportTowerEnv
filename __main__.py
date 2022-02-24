@@ -43,7 +43,6 @@ config = {
             "num_runways": 1,
             "runway_length": 3,
             "airspace_size": (5, 5),
-            "airplane_move_tiles_per_step": 1,
             "plane_spawn_probability_per_step": 0.3,
             "num_start_planes":  1,
             "landing_reward":  100,
