@@ -7,7 +7,8 @@ from gym_airport_tower.direction import Direction
 
 class Plane:
     """
-    The Plane is part of the Airspace. He moves around until he lands on a runway or crashes into another plane or runway.
+    The Plane is part of the Airspace. He moves around until he lands on a runway or crashes into another plane
+    or runway.
     """
 
     def __init__(self, position: List[int], idx: int, max_shape: Tuple[int, int],
@@ -30,9 +31,9 @@ class Plane:
 
     def move(self, direction: Direction = None) -> None:
         """
-        This method moves the train one tile forward. The plane continues to move into the direction it moved in the step
-        before. If the plain hits the border of the Airspace he tries to move into a random position, so that he does
-        not leaves the airspace.
+        This method moves the train one tile forward. The plane continues to move into the direction it moved in the
+        step before. If the plain hits the border of the Airspace he tries to move into a random position, so that he
+        does not leaves the airspace.
         :param direction: Sets the move direction of this plane to the direction before the plane moves.
         :type direction: gym_airport_tower.direction.Direction
         :return: None
