@@ -24,6 +24,7 @@ class Runway:
         :param alignment: Defines if the Runway is aligned vertical or horizontal.
         :type alignment: RunwayAlignment
         """
+        assert runway_len > 0
         self._position = position
         self.id = idx
         self._runway_len = runway_len
@@ -56,6 +57,8 @@ class Runway:
         :return: None
         :rtype: None
         """
+        planes = planes.copy()
+        # TODO: check plane position in Runway slice
         for plane in list(self._curr_planes.keys()):
             if plane not in planes:
                 del self._curr_planes[plane]
@@ -76,41 +79,48 @@ class Runway:
         :return: None
         :rtype: None
         """
+        assert plane in self._curr_planes
         if self.alignment == RunwayAlignment.VERTICAL:
             self._curr_planes[plane][int(plane.position[0] - self._position[0])] = max(self._curr_planes[plane]) + 1
 
         elif self.alignment == RunwayAlignment.HORIZONTAL:
             self._curr_planes[plane][int(plane.position[1] - self._position[1])] = max(self._curr_planes[plane]) + 1
 
-        self._check_landing_order(plane)
+        # self._check_landing_order(plane)
 
         self._check_landing_done(plane)
 
-    def _check_landing_order(self, plane: Plane) -> None:
+    def _check_landing_order(self, plane: Plane) -> bool:
         """
-        Checks that the plane traverse the Runway in the right order
+        Checks that the plane traverse the Runway in the right order. Otherwise an exception is thrown.
         :param plane: The plane to check
         :type plane: Plane
-        :return: None
-        :rtype: None
+        :return: True if in order, otherwise exception
+        :rtype: bool
         """
-        right_left = True
-        left_right = True
+        assert plane in self._curr_planes
         land_arr = self._curr_planes[plane]
+
+        right_left = True
         right_order = True
-        left_order = True
-        for i in range(self._runway_len - 1):
-            if right_order and not land_arr[i] != i + 1:
+        for i in range(self._runway_len):
+            if right_order and not land_arr[i] == i + 1:
                 right_order = False
             if not right_order and not land_arr[i] == 0:
                 right_left = False
-        for i in range(self._runway_len - 1, -1, -1):
-            if left_order and not land_arr[i] != self._runway_len - i:
+
+        left_right = True
+        left_order = True
+        for i in reversed(range(self._runway_len)):
+            if left_order and not land_arr[i] == self._runway_len - i:
                 left_order = False
             if not left_order and not land_arr[i] == 0:
                 left_right = False
+
         if not right_left and not left_right:
             raise ValueError("Aircraft changed direction on landing ......")
+        else:
+            return True
 
     def _check_landing_done(self, plane: Plane) -> None:
         """
@@ -121,6 +131,6 @@ class Runway:
         :rtype: None
         """
         landing_arr = self._curr_planes[plane]
-        if landing_arr == list(range(1, self._runway_len + 1)) or landing_arr == list(reversed(range(1, 3 + 1))):
+        if landing_arr == list(range(1, self._runway_len + 1)) or landing_arr == list(reversed(range(1, self._runway_len + 1))):
             del self._curr_planes[plane]
             plane.landed = True
