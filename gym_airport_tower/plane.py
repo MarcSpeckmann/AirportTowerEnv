@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 import numpy as np
 
@@ -10,7 +10,8 @@ class Plane:
     The Plane is part of the Airspace. He moves around until he lands on a runway or crashes into another plane or runway.
     """
 
-    def __init__(self, position: List[int], idx, max_shape, direction=Direction(np.random.randint(0, 4))) -> None:
+    def __init__(self, position: List[int], idx: int, max_shape: Tuple[int, int],
+                 direction: Direction = Direction(np.random.randint(0, 4))) -> None:
         """
         :param position: Actual position of the plane
         :type position: List[int, int]
