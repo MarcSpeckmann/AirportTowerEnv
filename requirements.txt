@@ -1,4 +1,4 @@
 gym
 numpy
-pytorch
+tensorflow
 ray
