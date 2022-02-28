@@ -1,3 +1,4 @@
+import math
 from typing import Tuple
 
 import gym
@@ -24,8 +25,8 @@ class AirportTowerEnv(gym.Env):
         # Fixed parameter / configurations
         # ===================================
 
-        self.seed: int = seed
-        np.random.seed(self.seed)
+        self._seed: int = seed
+        np.random.seed(self._seed)
         self.max_planes: int = max_planes
         self.num_runways: int = num_runways
         self.runway_length: int = runway_length
@@ -47,13 +48,13 @@ class AirportTowerEnv(gym.Env):
         # GYM values
         # ===================================
 
-        self.action_space = spaces.MultiDiscrete([self.max_planes, 4])
+        self.action_space = gym.spaces.Discrete(self.max_planes * 4)
         self.observation_space = spaces.Box(low=-1, high=self.num_runways + self.max_planes,
                                             shape=self.airspace.air_space.shape, dtype=np.int32)
         self.reward_range = gym.spaces.Box(low=self.max_planes * self.plane_in_air_penalty,
-                                           high=self.max_planes * self.landing_reward, shape=(1,), dtype=np.int32)
+                                           high=self.max_planes * self.landing_reward, shape=(1,), dtype=np.int64)
 
-    def step(self, action: Tuple[int, int]):
+    def step(self, action: int):
         """
         Implement gym step method,
         :param action: The action from the agent (planeID, direction)
@@ -67,7 +68,7 @@ class AirportTowerEnv(gym.Env):
         num_before_planes = len(self.airspace.planes)
         # Move all planes/fulfill action from agent
         try:
-            self.airspace.move_planes(actions=action)
+            self.airspace.move_planes(actions=(math.floor(action / 4), action % 4))
         except ValueError:
             done = True
 
@@ -133,3 +134,7 @@ class AirportTowerEnv(gym.Env):
             print('+' + (((decs + 2) * (airspace.shape[1])) + 1) * '-' + '+\n')
         else:
             raise ValueError("Unknown render type")
+
+    def seed(self, seed=None):
+        self._seed = seed
+        np.random.seed(self._seed)
