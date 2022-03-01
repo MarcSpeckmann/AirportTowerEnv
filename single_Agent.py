@@ -1,4 +1,3 @@
-import numpy as np
 import ray
 from ray import tune
 from ray.tune import register_env
@@ -10,18 +9,16 @@ def env_creator(env_config):
     return AirportTowerEnv(**env_config)
 
 
-SEED = 666
-
 register_env("AirportTowerEnv", env_creator)
 
 ray.init(include_dashboard=False)
 
 config = {
     # === Settings for Rollout Worker processes ===
-    "num_workers": 2,
+    # "num_workers": 3,
     # "num_gpus":1,
     # "num_envs_per_worker": 1,
-    # "seed": SEED,
+    "seed": tune.grid_search([42, 666, 123456789]),
     # === Model ===
     # Number of atoms for representing the distribution of return. When
     # this is greater than 1, distributional Q-learning is used.
@@ -37,8 +34,7 @@ config = {
     "dueling": True,
     # Dense-layer setup for each the advantage branch and the value branch
     # in a dueling architecture.
-    "hiddens": [tune.choice([16, 32, 64, 128, 256, 512, 1024, 2048]),
-                tune.choice([16, 32, 64, 128, 256, 512, 1024, 2048])],
+    "hiddens": [256],
     # Whether to use double dqn
     "double_q": True,
     # N-step Q learning
@@ -82,6 +78,17 @@ config = {
     # === Parallelism ===
     # Whether to compute priorities on workers.
     "worker_side_prioritization": False,
+    # === Exploration
+    "explore": True,
+    "exploration_config": {
+        # Exploration sub-class by name or full path to module+class
+        # (e.g. “ray.rllib.utils.exploration.epsilon_greedy.EpsilonGreedy”)
+        "type": "EpsilonGreedy",
+        # Parameters for the Exploration class' constructor:
+        "initial_epsilon": 1.0,
+        "final_epsilon": 0.02,
+        "epsilon_timesteps": 1700000,  # Timesteps over which to anneal epsilon.
+    },
     # === Deep Learning Framework Settings ===
     "framework": "tf2",
     "eager_tracing": True,
@@ -89,11 +96,11 @@ config = {
     "env": 'AirportTowerEnv',
     "horizon": 200,
     "env_config": {
-        "seed": SEED,
-        "max_planes": 3,
-        "num_runways": 1,
-        "runway_length": 3,
-        "airspace_size": (5, 5),
+        "seed": 42,  # seed gets seed by ray
+        "max_planes": tune.grid_search([1, 3, 5]),
+        "num_runways": tune.grid_search([1, 3, 5]),
+        "runway_length": tune.grid_search([2, 3, 4]),
+        "airspace_size": tune.grid_search([(5, 5), (7, 7), (10, 10)]),
         "plane_spawn_probability_per_step": 0.3,
         "num_start_planes": 1,
         "landing_reward": 100,
@@ -103,16 +110,12 @@ config = {
     },
 }
 
-np.random.seed(SEED)
-
-# algo = BayesOptSearch(metric="episode_len_mean", mode="max", random_state=SEED)
-
 tune.run(
     "DQN",
-    # search_alg=algo,
-    stop={"episode_len_mean": 200, 'timesteps_total': 1000000},
+    stop={"episode_len_mean": 200, 'timesteps_total': 2000000},
     checkpoint_at_end=True,
-    num_samples=500,
+    num_samples=1,
     config=config,
     resume=False,
+    local_dir="~/ray_results/basicDQNdifferentsingleENV"
 )

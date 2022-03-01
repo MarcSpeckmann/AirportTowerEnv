@@ -91,7 +91,7 @@ class Airspace:
             self.planes.append(Plane([avail_pos[0][new_pos_ind], avail_pos[0][new_pos_ind]], max_shape=airspace.shape,
                                      idx=free_ids[0]))
 
-    def move_planes(self, actions: Tuple[int, int]) -> None:
+    def move_planes(self, actions: List[Tuple[int, int]]) -> None:
         """
         Moves all planes.
         :param actions: Move the plane with given id into direction
@@ -100,9 +100,12 @@ class Airspace:
         :rtype: None
         """
         for plane in self.planes:
-            if plane.id == actions[0]:
-                plane.move(Direction(actions[1]))
-            else:
+            moved = False
+            for action in actions:
+                if plane.id == action[0]:
+                    plane.move(Direction(action[1]))
+                    moved = True
+            if not moved:
                 plane.move()
 
         self.check_direct_collision()

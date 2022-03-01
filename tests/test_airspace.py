@@ -62,7 +62,7 @@ class TestAirspace(TestCase):
         airspace.planes.append(Plane(position=[1, 0], idx=0, max_shape=(10, 10), direction=Direction.SOUTH))
         airspace.planes.append(Plane(position=[2, 0], idx=1, max_shape=(10, 10), direction=Direction.NORTH))
 
-        airspace.move_planes((0, Direction.EAST.value))
+        airspace.move_planes([(0, Direction.EAST.value)])
 
         self.assertEqual(airspace.planes[0].position, [1, 1])
         self.assertEqual(airspace.planes[0].direction, Direction.EAST)
@@ -126,7 +126,7 @@ class TestAirspace(TestCase):
 
     def test_generate_runways(self):
         airspace = Airspace(airspace_size=(10, 10), max_planes=2, num_runways=2, runway_length=3,
-                            plane_spawn_probability_per_step=0.3, num_start_planes=5)
+                            plane_spawn_probability_per_step=0.3, num_start_planes=2)
         airspace.runways = []
         airspace.generate_runways()
         self.assertEqual(2, len(airspace.runways))
