@@ -3,7 +3,6 @@ from typing import Tuple
 
 import gym
 import numpy as np
-from gym import spaces
 
 from gym_airport_tower.airspace import Airspace
 
@@ -49,8 +48,8 @@ class AirportTowerEnv(gym.Env):
         # ===================================
 
         self.action_space = gym.spaces.Discrete(self.max_planes * 4)
-        self.observation_space = spaces.Box(low=-1, high=self.num_runways + self.max_planes,
-                                            shape=self.airspace.air_space.shape, dtype=np.int32)
+        self.observation_space = gym.spaces.Box(low=-1, high=self.num_runways + self.max_planes,
+                                                shape=self.airspace.air_space.shape, dtype=np.int32)
         self.reward_range = gym.spaces.Box(low=self.max_planes * self.plane_in_air_penalty,
                                            high=self.max_planes * self.landing_reward, shape=(1,), dtype=np.int64)
 
@@ -68,7 +67,7 @@ class AirportTowerEnv(gym.Env):
         num_before_planes = len(self.airspace.planes)
         # Move all planes/fulfill action from agent
         try:
-            self.airspace.move_planes(actions=(math.floor(action / 4), action % 4))
+            self.airspace.move_planes(actions=[(math.floor(action / 4), action % 4)])
         except ValueError:
             done = True
 
