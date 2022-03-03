@@ -18,7 +18,12 @@ config = {
     "num_workers": 7,
     # "num_gpus":1,
     # "num_envs_per_worker": 1,
-    "seed": tune.grid_search([42, 666, 123456789]),
+    "seed": tune.grid_search(list(np.random.randint(low=0, high=99999999, size=3))),
+    # === Settings for the Trainer process ===
+    # Discount factor of the MDP.
+    "gamma": 0.99,
+    # The default learning rate.
+    "lr": 0.0001,
     # === Model ===
     # Number of atoms for representing the distribution of return. When
     # this is greater than 1, distributional Q-learning is used.
@@ -96,7 +101,7 @@ config = {
     "env": 'AirportTowerEnv',
     "horizon": 200,
     "env_config": {
-        "seed": 42, # seed gets set by ray
+        "seed": 42, # seed gets seed by ray
         "max_planes": tune.grid_search([1, 2]),
         "num_runways": tune.grid_search([1, 2]),
         "runway_length": tune.grid_search([3]),
@@ -108,6 +113,33 @@ config = {
         "plane_on_runway_reward": 5,
         "render_env": False
     },
+    # === Evaluation Settings ===
+    # Evaluate with every `evaluation_interval` training iterations.
+    # The evaluation stats will be reported under the "evaluation" metric key.
+    # Note that for Ape-X metrics are already only reported for the lowest
+    # epsilon workers (least random workers).
+    # Set to None (or 0) for no evaluation.
+    "evaluation_interval": 2,
+    # Typical usage is to pass extra args to evaluation env creator
+    # and to disable exploration by computing deterministic actions.
+    # IMPORTANT NOTE: Policy gradient algorithms are able to find the optimal
+    # policy, even if this is a stochastic one. Setting "explore=False" here
+    # will result in the evaluation workers not using this optimal policy!
+    "evaluation_config": {
+        # Example: overriding env_config, exploration, etc:
+        # "env_config": {...},
+        "explore": False,
+        "env_config": {
+            "seed": 666,
+        },
+    },
+    # Number of parallel workers to use for evaluation. Note that this is set
+    # to zero by default, which means evaluation will be run in the trainer
+    # process (only if evaluation_interval is not None). If you increase this,
+    # it will increase the Ray resource usage of the trainer since evaluation
+    # workers are created separately from rollout workers (used to sample data
+    # for training).
+    "evaluation_num_workers": 0,
 }
 
 tune.run(
