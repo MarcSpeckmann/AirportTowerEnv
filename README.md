@@ -23,11 +23,11 @@ conda activate AirportTowerEnv
 3. Run the Experiments
 
 ```bash
-python3 single_agent.py
+python3 single_agent_no_hp_opt.py
 ```
 
 ```bash
-python3 multi_agent.py
+python3 multi_agent_no_hp_opt.py
 ```
 
 4. Inspect the results
