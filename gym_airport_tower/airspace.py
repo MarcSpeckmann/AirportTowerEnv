@@ -192,7 +192,7 @@ class Airspace:
                                idx=i))
                     break
             else:
-                # TODO: check if creation is im/possible instead of trying
+                # TODO: check if creation is im/possible instead of trying.
                 raise RuntimeError("No runway creation possible after {} tries.".format(create_limit))
 
     def check_runway(self) -> None:

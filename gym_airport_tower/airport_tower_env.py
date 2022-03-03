@@ -105,7 +105,7 @@ class AirportTowerEnv(gym.Env):
 
     def render(self, mode="human") -> None:
         """
-        Implement Gym render method
+        Implement Gym render method.
         :param mode: Render mode
         :type mode: str
         :return: None

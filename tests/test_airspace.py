@@ -49,7 +49,7 @@ class TestAirspace(TestCase):
         airspace.spawn_random_plane(1)
         self.assertEqual(1, len(airspace.planes))
         airspace.planes = []
-        for i in range(100):
+        for _ in range(100):
             airspace.spawn_random_plane(0.33)
 
         self.assertAlmostEquals(len(airspace.planes) / 100, 0.33, places=1)

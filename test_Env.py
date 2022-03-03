@@ -2,6 +2,8 @@ from time import sleep
 
 from gym_airport_tower.airport_tower_env import AirportTowerEnv
 
+# An example of the environment with rendering
+
 env = AirportTowerEnv()
 done = False
 env.reset()

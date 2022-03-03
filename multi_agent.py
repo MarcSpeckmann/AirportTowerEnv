@@ -127,34 +127,8 @@ config = {
                      "plane2": (None, gym.spaces.Box(low=-1, high=4,
                                                      shape=(5, 5), dtype=np.int32), gym.spaces.Discrete(4), {}),
                      },
-        # Keep this many policies in the "policy_map" (before writing
-        # least-recently used ones to disk/S3).
-        "policy_map_capacity": 100,
-        # Where to store overflowing (least-recently used) policies?
-        # Could be a directory (str) or an S3 location. None for using
-        # the default output dir.
-        "policy_map_cache": None,
         # Function mapping agent ids to policy ids.
         "policy_mapping_fn": lambda agent_id: agent_id,
-        # Optional list of policies to train, or None for all policies.
-        "policies_to_train": None,
-        # Optional function that can be used to enhance the local agent
-        # observations to include more state.
-        # See rllib/evaluation/observation_function.py for more info.
-        "observation_fn": None,
-        # When replay_mode=lockstep, RLlib will replay all the agent
-        # transitions at a particular timestep together in a batch. This allows
-        # the policy to implement differentiable shared computations between
-        # agents it controls at that timestep. When replay_mode=independent,
-        # transitions are replayed independently per policy.
-        "replay_mode": "independent",
-        # Which metric to use as the "batch size" when building a
-        # MultiAgentBatch. The two supported values are:
-        # env_steps: Count each time the env is "stepped" (no matter how many
-        #   multi-agent actions are passed/how many multi-agent observations
-        #   have been returned in the previous step).
-        # agent_steps: Count each individual agent step as one step.
-        "count_steps_by": "env_steps",
     },
     # === Evaluation Settings ===
     # Evaluate with every `evaluation_interval` training iterations.
