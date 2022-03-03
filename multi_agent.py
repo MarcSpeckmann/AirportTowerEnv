@@ -94,7 +94,7 @@ config = {
         # Parameters for the Exploration class' constructor:
         "initial_epsilon": 1.0,
         "final_epsilon": 0.02,
-        "epsilon_timesteps": 40000,  # Timesteps over which to anneal epsilon.
+        "epsilon_timesteps": 950000,  # Timesteps over which to anneal epsilon.
     },
     # === Deep Learning Framework Settings ===
     "framework": "tf2",
@@ -103,9 +103,9 @@ config = {
     "env": 'AirportTowerMultiEnv',
     "horizon": 200,
     "env_config": {
-        "seed": 42,  # seed gets set by ray
-        "max_planes": tune.grid_search([2]),
-        "num_runways": tune.grid_search([1]),
+        "seed": 42,  # seed gets seed by ray
+        "max_planes": tune.grid_search([1, 2]),
+        "num_runways": tune.grid_search([1, 2]),
         "runway_length": tune.grid_search([3]),
         "airspace_size": tune.grid_search([(5, 5)]),
         "plane_spawn_probability_per_step": 0.3,
@@ -187,10 +187,10 @@ config = {
 
 tune.run(
     "DQN",
-    stop={"episode_len_mean": 200, 'timesteps_total': 50000},
+    stop={"episode_len_mean": 200, 'timesteps_total': 1000000},
     checkpoint_at_end=True,
     num_samples=1,
     config=config,
     resume=False,
-    local_dir="~/ray_results/testmulti"
+    local_dir="~/ray_results/multi_agent"
 )

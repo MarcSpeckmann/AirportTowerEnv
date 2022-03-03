@@ -9,6 +9,7 @@ from gym_airport_tower.airport_tower_env import AirportTowerEnv
 def env_creator(env_config):
     return AirportTowerEnv(**env_config)
 
+
 register_env("AirportTowerEnv", env_creator)
 
 ray.init(include_dashboard=False)
@@ -86,13 +87,13 @@ config = {
     # === Exploration
     "explore": True,
     "exploration_config": {
-       # Exploration sub-class by name or full path to module+class
-       # (e.g. “ray.rllib.utils.exploration.epsilon_greedy.EpsilonGreedy”)
-       "type": "EpsilonGreedy",
-       # Parameters for the Exploration class' constructor:
-       "initial_epsilon": 1.0,
-       "final_epsilon": 0.02,
-       "epsilon_timesteps": 950000,  # Timesteps over which to anneal epsilon.
+        # Exploration sub-class by name or full path to module+class
+        # (e.g. “ray.rllib.utils.exploration.epsilon_greedy.EpsilonGreedy”)
+        "type": "EpsilonGreedy",
+        # Parameters for the Exploration class' constructor:
+        "initial_epsilon": 1.0,
+        "final_epsilon": 0.02,
+        "epsilon_timesteps": 950000,  # Timesteps over which to anneal epsilon.
     },
     # === Deep Learning Framework Settings ===
     "framework": "tf2",
@@ -101,7 +102,7 @@ config = {
     "env": 'AirportTowerEnv',
     "horizon": 200,
     "env_config": {
-        "seed": 42, # seed gets seed by ray
+        "seed": 42,  # seed gets seed by ray
         "max_planes": tune.grid_search([1, 2]),
         "num_runways": tune.grid_search([1, 2]),
         "runway_length": tune.grid_search([3]),
@@ -149,5 +150,5 @@ tune.run(
     num_samples=1,
     config=config,
     resume=False,
-    local_dir="~/ray_results/basicDQNdifferentsingleENV256256"
+    local_dir="~/ray_results/single_agent"
 )
