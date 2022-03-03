@@ -16,7 +16,7 @@ ray.init(include_dashboard=False)
 
 config = {
     # === Settings for Rollout Worker processes ===
-    "num_workers": 3,
+    "num_workers": 7,
     # "num_gpus":1,
     # "num_envs_per_worker": 1,
     "seed": tune.grid_search([24088626, 30953886, 20735918]),

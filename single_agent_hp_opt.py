@@ -16,8 +16,7 @@ ray.init(include_dashboard=False)
 
 config = {
     # === Settings for Rollout Worker processes ===
-    "num_workers": 8,
-    "num_gpus": 0.2,
+    "num_workers": 3,
     # "num_envs_per_worker": 1,
     "seed": tune.grid_search([24088626, 30953886, 20735918]),
     # === Settings for the Trainer process ===

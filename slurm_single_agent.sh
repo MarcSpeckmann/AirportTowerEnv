@@ -1,10 +1,9 @@
 #!/bin/bash -l
 #SBATCH --job-name=AirportTowerEnvSingle
 #SBATCH --ntasks=1
-#SBATCH --gres=gpu::2
-#SBATCH --cpus-per-task=90
+#SBATCH --cpus-per-task=100
 #SBATCH --time=05:00:00
-#SBATCH --mem=90G
+#SBATCH --mem=64G
 # node the job ran on
 echo "Job ran on:" $(hostname)
 # load the relevant modules
