@@ -10,6 +10,5 @@ echo "Job ran on:" $(hostname)
 # load the relevant modules
 module load Miniconda3
 conda activate AirportTowerEnv
-cd AirportTowerEnv
 # run the simulation
 python3 single_agent.py
