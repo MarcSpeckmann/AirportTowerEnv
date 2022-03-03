@@ -150,5 +150,5 @@ tune.run(
     num_samples=1,
     config=config,
     resume=False,
-    local_dir="~/ray_results/single_agent"
+    local_dir="~/ray_results/single_agent_default_hp"
 )

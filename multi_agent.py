@@ -104,7 +104,7 @@ config = {
     "horizon": 200,
     "env_config": {
         "seed": 42,  # seed gets seed by ray
-        "max_planes": tune.grid_search([1, 2]),
+        "max_planes": tune.grid_search([2]),
         "num_runways": tune.grid_search([1, 2]),
         "runway_length": tune.grid_search([3]),
         "airspace_size": tune.grid_search([(5, 5)]),
@@ -123,8 +123,6 @@ config = {
         "policies": {"plane0": (None, gym.spaces.Box(low=-1, high=4,
                                                      shape=(5, 5), dtype=np.int32), gym.spaces.Discrete(4), {}),
                      "plane1": (None, gym.spaces.Box(low=-1, high=4,
-                                                     shape=(5, 5), dtype=np.int32), gym.spaces.Discrete(4), {}),
-                     "plane2": (None, gym.spaces.Box(low=-1, high=4,
                                                      shape=(5, 5), dtype=np.int32), gym.spaces.Discrete(4), {}),
                      },
         # Function mapping agent ids to policy ids.
@@ -166,5 +164,5 @@ tune.run(
     num_samples=1,
     config=config,
     resume=False,
-    local_dir="~/ray_results/multi_agent"
+    local_dir="~/ray_results/multi_agent_default_hp"
 )
