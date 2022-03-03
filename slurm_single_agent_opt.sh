@@ -10,4 +10,4 @@ echo "Job ran on:" $(hostname)
 module load Miniconda3
 conda activate AirportTowerEnv
 # run the simulation
-python3 multi_agent_hp_opt.py
+python3 single_agent_hp_opt.py

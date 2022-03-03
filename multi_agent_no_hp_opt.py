@@ -20,7 +20,7 @@ config = {
     "num_workers": 3,
     # "num_gpus":1,
     # "num_envs_per_worker": 1,
-    "seed": tune.grid_search(list(np.random.randint(low=0, high=99999999, size=3))),
+    "seed": tune.grid_search([24088626, 30953886, 20735918]),
     # === Settings for the Trainer process ===
     # Discount factor of the MDP.
     "gamma": 0.99,
@@ -154,7 +154,7 @@ config = {
     # it will increase the Ray resource usage of the trainer since evaluation
     # workers are created separately from rollout workers (used to sample data
     # for training).
-    "evaluation_num_workers": 0,
+    "evaluation_num_workers": 1,
 }
 
 tune.run(
