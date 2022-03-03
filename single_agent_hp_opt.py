@@ -39,8 +39,8 @@ config = {
     "dueling": tune.choice([True, False]),
     # Dense-layer setup for each the advantage branch and the value branch
     # in a dueling architecture.
-    "hiddens": tune.choice([16], [64], [256], [1024], [16, 16], [64, 64], [256, 256], [1024, 1024], [16, 16, 16],
-                           [64, 64, 64], [256, 256, 256], [1024, 1024, 1024],
+    "hiddens": tune.choice([[16], [64], [256], [1024], [16, 16], [64, 64], [256, 256], [1024, 1024], [16, 16, 16],
+                           [64, 64, 64], [256, 256, 256], [1024, 1024, 1024]]
                            ),
     # Whether to use double dqn
     "double_q": tune.choice([True, False]),
