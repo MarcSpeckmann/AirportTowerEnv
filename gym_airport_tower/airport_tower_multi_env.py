@@ -10,7 +10,10 @@ from gym_airport_tower.airspace import Airspace
 
 class AirportTowerMultiEnv(MultiAgentEnv):
     """
-    TODO:
+    AirportTowerMultiEnv is an rllib MultiAgentEnv environment that simulates the tower of an airport for multiple rl
+    agents. On a grid of size X x Y, N aeroplanes are to be landed on M runways of length l.
+    In each step, the agents have the option of flying an aircraft to the north, east, south or west.
+    A plane is considered to have landed when it has crossed all the fields of a runway in the correct order.
     """
 
     def __init__(self, max_planes: int = 2,
@@ -24,9 +27,6 @@ class AirportTowerMultiEnv(MultiAgentEnv):
                  plane_on_runway_reward: int = 5,
                  seed: int = 666,
                  render_env: bool = False) -> None:
-        """
-        TODO:
-        """
         # Fixed parameter / configurations
         # ===================================
 
@@ -61,8 +61,9 @@ class AirportTowerMultiEnv(MultiAgentEnv):
 
     def reset(self) -> MultiAgentDict:
         """
-        TODO:
-        :return:
+        Implement MultiAgentEnv reset method.
+        Every agents gets the observation.
+        :return: Observation of Environment for each agent.
         :rtype: MultiAgentDict
         """
         self.airspace.reset()
@@ -77,7 +78,9 @@ class AirportTowerMultiEnv(MultiAgentEnv):
     def step(self, action_dict: MultiAgentDict) -> Tuple[MultiAgentDict, MultiAgentDict,
                                                          MultiAgentDict, MultiAgentDict]:
         """
-        TODO:
+        Implement MultiAgentEnv step method.
+        Moves plane of each agent.
+        Each agent gets the same observation, reward and done at the end.
         :param action_dict:
         :type action_dict: MultiAgentDict
         :return:
