@@ -23,11 +23,11 @@ conda activate AirportTowerEnv
 3. Run the Experiments
 
 ```bash
-python3 single_Agent.py
+python3 single_agent.py
 ```
 
 ```bash
-python3 multi_Agent.py
+python3 multi_agent.py
 ```
 
 4. Inspect the results
