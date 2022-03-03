@@ -12,7 +12,7 @@ A plane is considered to have landed when it has crossed all the fields of a run
 git clone https://github.com/XxHalbfettxX/AirportTowerEnv.git
 ```
 
-2. Create the environment
+2. Create the environment (Linux only)
 
 ```bash
 cd AirportTowerEnv
