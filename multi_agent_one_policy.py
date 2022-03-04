@@ -163,5 +163,5 @@ tune.run(
     num_samples=1,
     config=config,
     resume=False,
-    local_dir="~/ray_results/multi_agent_default_hp"
+    local_dir="~/ray_results/multi_agent_one_policy"
 )

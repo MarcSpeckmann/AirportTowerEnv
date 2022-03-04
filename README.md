@@ -27,7 +27,10 @@ python3 single_agent_no_hp_opt.py
 ```
 
 ```bash
-python3 multi_agent_no_hp_opt.py
+python3 multi_agent_one_policy.py
+```
+```bash
+python3 multi_agent_two_policy.py
 ```
 
 4. Inspect the results

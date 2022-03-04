@@ -1,13 +1,13 @@
 #!/bin/bash -l
 #SBATCH --job-name=AirportTowerEnvMulti
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=100
+#SBATCH --cpus-per-task=55
 #SBATCH --time=05:00:00
-#SBATCH --mem=100G
+#SBATCH --mem=55G
 # node the job ran on
 echo "Job ran on:" $(hostname)
 # load the relevant modules
 module load Miniconda3
 conda activate AirportTowerEnv
 # run the simulation
-python3 multi_agent_no_hp_opt.py
+python3 multi_agent_two_policy.py
