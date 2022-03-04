@@ -17,7 +17,7 @@ ray.init(include_dashboard=False)
 
 config = {
     # === Settings for Rollout Worker processes ===
-    "num_workers": 3,
+    "num_workers": 7,
     # "num_gpus":1,
     # "num_envs_per_worker": 1,
     "seed": tune.grid_search([24088626, 30953886, 20735918]),
@@ -120,13 +120,12 @@ config = {
         # Map of type MultiAgentPolicyConfigDict from policy ids to tuples
         # of (policy_cls, obs_space, act_space, config). This defines the
         # observation and action spaces of the policies and any extra config.
-        "policies": {"plane0": (None, gym.spaces.Box(low=-1, high=4,
-                                                     shape=(5, 5), dtype=np.int32), gym.spaces.Discrete(4), {}),
-                     "plane1": (None, gym.spaces.Box(low=-1, high=4,
-                                                     shape=(5, 5), dtype=np.int32), gym.spaces.Discrete(4), {}),
+        "policies": {"plane": (None, gym.spaces.Box(low=-1, high=4,
+                                                    shape=(5, 5), dtype=np.int32), gym.spaces.Discrete(4), {}
+                               )
                      },
         # Function mapping agent ids to policy ids.
-        "policy_mapping_fn": lambda agent_id: agent_id,
+        "policy_mapping_fn": lambda agent_id: "plane",
     },
     # === Evaluation Settings ===
     # Evaluate with every `evaluation_interval` training iterations.

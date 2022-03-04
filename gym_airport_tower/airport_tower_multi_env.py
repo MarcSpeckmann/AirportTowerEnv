@@ -93,7 +93,7 @@ class AirportTowerMultiEnv(MultiAgentEnv):
         # Move all planes/fulfill action from agent
         actions = []
         for agent, action in action_dict.items():
-            actions.append((agent.replace("plane", ""), action))
+            actions.append((int(agent.replace("plane", "")), action))
 
         try:
             self.airspace.move_planes(actions=actions)
